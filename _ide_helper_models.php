@@ -8,3 +8,48 @@
  */
 
 
+namespace App{
+/**
+ * App\Todolist
+ *
+ * @property int $id
+ * @property int $userId
+ * @property string $title
+ * @property string $description
+ * @property \Carbon\Carbon|null $createdAt
+ * @property \Carbon\Carbon|null $updatedAt
+ * @property-read \App\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereUserId($value)
+ */
+	class Todolist extends \Eloquent {}
+}
+
+namespace App{
+/**
+ * App\User
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property string|null $rememberToken
+ * @property \Carbon\Carbon|null $createdAt
+ * @property \Carbon\Carbon|null $updatedAt
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Todolist[] $todolists
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereUpdatedAt($value)
+ */
+	class User extends \Eloquent {}
+}
+

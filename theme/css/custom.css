@@ -1,0 +1,131 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    padding-top: 70px;
+    background: #f1f1f1 url('../images/body-bg.png');
+}
+
+/* Navbar brand */
+
+.navbar .navbar-brand {
+    font-size: 20px;
+    color: #eee;
+    letter-spacing: -1px;
+    text-transform: uppercase;
+}
+
+.navbar .navbar-brand strong {
+    font-weight: bold;
+    letter-spacing: -2px;
+    padding-right: 3px;
+    color: #fff;
+}
+
+
+/* Header */
+
+header {
+    background: #3e4249 url('../images/header-bg.png');
+    color: #eee;
+    padding: 15px;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #080808;
+}
+
+h1.header-title {
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.pull-right .btn {
+    margin: 20px 0 10px;
+}
+
+
+/* List group */
+
+.list-group-item:hover {
+    background: #eee;
+    cursor: pointer;
+}
+
+.list-group-item:hover .buttons, table.table tr:hover .row-buttons {
+    display: block;
+}
+
+.list-group-item-heading {
+    font-size: 150%;
+}
+
+.list-group-item-text {
+    color: #999;
+}
+
+.buttons {
+    position: absolute;
+    height: 20px;
+    width: 80px;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    display: none;
+}
+
+.panel-footer small, .modal-footer small {
+    color: #999;
+}
+
+
+
+
+
+
+
+/* Modal */
+.modal-content {
+    background: #f1f1f1 url('../images/body-bg.png');
+}
+
+
+/* Task modal */
+
+input.task-input {
+    width: 100%;
+    border: none;
+    font-size: 18px;
+    height: 46px;
+    line-height: 1.33333;
+    color: #555;
+    background: #fff;
+    display: block;
+    font-style: italic;
+}
+
+input.task-input:focus, input.task-input:active {
+    outline: none;
+}
+
+.done {
+    text-decoration: line-through;
+    color: #ddd;
+}
+
+table.table tbody tr td {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.task-item {
+    position: relative;
+}
+
+.row-buttons {
+    position: absolute;
+    height: 20px;
+    width: 40px;
+    top: 15px;
+    right: 10px;
+    text-align: center;
+    display: none;
+}
