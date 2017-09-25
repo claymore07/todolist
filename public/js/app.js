@@ -1,3 +1,9 @@
+$( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+    alert("Session expired. You'll be take to the login page");
+    location.href = "/login";
+});
+
+
 $('body').on('click','.show-todolist-modal',(function(event) {
     event.preventDefault();
     var me = $(this),
@@ -94,18 +100,90 @@ $('#todo-list-save-btn').click(function (event) {
 });
 
 
+//task modal management
 
-
-
-
+function countActiveTask() {
+    var total = $('tr.task-item:not(:has(td.done))').length;
+    $('#active-counter').text(total + (total > 1? ' tasks remain' : ' task remains'));
+}
+function countAllTasksOfSelectedTodoList() {
+    var total = $('#task-table-body tr').length,
+        selectedTodoListId = $('#selected-todo-list').val();
+    $('#' + selectedTodoListId).find('span.badge').text(total + ' ' + (total>1 ? 'tasks': 'task'));
+}
 
 $('body').on('click', '.show-task-modal', (function(event) {
     event.preventDefault();
 
+    var me = $(this),
+        url = me.attr('href'),
+        title = me.data('title'),
+        action = me.data('action'),
+        parent = me.closest('.list-group-item');
+    $('#task-modal-subtitle').text(title);
+    $('#task-form').attr("action", action);
+    $('#selected-todo-list').val(parent.attr('id'));
+
+    $.ajax({
+        url:url,
+        dataType:'html',
+        success:function (response) {
+            $('#task-table-body').html(response);
+            initIcheck();
+            countActiveTask();
+        }
+    });
+
+
     $('#task-modal').modal('show');
 }));
 
+$('#task-form').submit(function (event) {
+    event.preventDefault();
+console.log('fuck');
+    var form = $(this),
+        action = form.attr('action');
 
+    $.ajax({
+        url: action,
+        type: 'POST',
+        data:form.serialize(),
+        success: function (response) {
+            $('#task-table-body').prepend(response);
+            initIcheck();
+            form.trigger('reset');
+            countActiveTask();
+
+            countAllTasksOfSelectedTodoList();
+        },
+        error:function (xhr) {
+            console.log(xhr);
+        }
+    });
+});
+// delete task management
+
+$('#task-table-body').on('click', '.remove-task-btn', function (event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    $.ajax({
+        url:url,
+        type:'DELETE',
+        data:{
+            _token:$('input[name=_token]').val()
+        },
+        success:function (response) {
+            $('#task-'+response.id).fadeOut(function () {
+                $(this).remove();
+                countActiveTask();
+                countAllTasksOfSelectedTodoList();
+            });
+        }
+    });
+});
+
+
+//delete modal management
 
 $('body').on('click', '.show-confirm-modal', (function(event) {
     event.preventDefault();
@@ -145,9 +223,32 @@ $('#confirm-remove-btn').click( function (event) {
 
     
 });
+function markTheTask(checkbox) {
+   var url = checkbox.data('url'),
+        completed = checkbox.is(":checked");
+    console.log(completed);
+    $.ajax({
+        url:url,
+        type:'PUT',
+        data: {
+            completed:completed,
+            _token:$("input[name=_token]").val()
+        },
+        success:function (response) {
+            var nextTd = checkbox.closest('td').next();
+            if(completed){
+                nextTd.addClass('done');
+            }
+            else {
+                nextTd.removeClass('done');
+            }
+            countActiveTask();
+        }
+    });
+}
 
+function initIcheck() {
 
-$(function() {
     $('input[type=checkbox]').iCheck({
         checkboxClass: 'icheckbox_square-green',
         increaseArea: '20%'
@@ -160,4 +261,36 @@ $(function() {
     $('#check-all').on('ifUnchecked', function(e) {
         $('.check-item').iCheck('uncheck');
     });
+
+    $('.check-item')
+        .on('ifChecked', function (event) {
+            var checkbox = $(this);
+            markTheTask(checkbox);
+        })
+        .on('ifUnchecked', function (event) {
+            var checkbox = $(this);
+            markTheTask(checkbox);
+        });
+}
+
+$('.filter-btn').click(function (event) {
+    event.preventDefault();
+
+    var id = this.id;
+    $(this).addClass('active')
+           .parent()
+           .children()
+           .not(event.target)
+           .removeClass('active');
+    if(id == "all-tasks"){
+        $('tr.task-item').show();
+    }
+    else if(id == "active-tasks"){
+        $('tr.task-item:has(td.done)').hide();
+        $('tr.task-item:not(:has(td.done))').show();
+    }
+    else if(id == "completed-tasks"){
+        $('tr.task-item:has(td.done)').show();
+        $('tr.task-item:not(:has(td.done))').hide();
+    }
 });

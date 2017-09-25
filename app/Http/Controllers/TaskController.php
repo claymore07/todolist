@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TodoListCreatRequest;
+use App\Http\Requests\TaskCreateRequest;
+use App\Task;
 use App\Todolist;
-use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class TodoListController extends Controller
+class TaskController extends Controller
 {
     public function __construct()
     {
@@ -16,21 +17,14 @@ class TodoListController extends Controller
         // check if user is autenticated for non-ajax request
         $this->middleware('auth');
     }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        $user = Auth::user();
-
-        $todolists = $user->todolists()->with('tasks')->orderBy('updated_at', 'desc')->get();
-
-         return view('todolists.index', compact('todolists'));
-
+        //
     }
 
     /**
@@ -41,8 +35,6 @@ class TodoListController extends Controller
     public function create()
     {
         //
-        $todolist = new Todolist();
-        return view('todolists.form', compact('todolist'));
     }
 
     /**
@@ -51,13 +43,12 @@ class TodoListController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TodoListCreatRequest $request)
+    public function store(TaskCreateRequest $request, $todoListId)
     {
         //
-        $input = $request->all();
-
-        $todolist =  Auth::user()->todolists()->create($input);
-        return view("todolists.item", compact('todolist'));
+        $todoList = Todolist::findOrFail($todoListId);
+        $task = $todoList->tasks()->create($request->all());
+        return view('tasks.item', compact('task'));
     }
 
     /**
@@ -69,14 +60,6 @@ class TodoListController extends Controller
     public function show($id)
     {
         //
-        $user =Auth::user();
-
-        $todlist = Todolist::findOrFail($id);
-        if($todlist->user_id != $user->id){
-            return 'fuck';
-        }
-        $tasks = $todlist->tasks()->orderBy("created_at", "desc")->get();
-        return view('tasks.index', compact('todlist','tasks'));
     }
 
     /**
@@ -85,13 +68,9 @@ class TodoListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit( $id)
+    public function edit($id)
     {
         //
-
-        $todolist = Todolist::findOrFail($id);
-
-        return view('todolists.form', compact('todolist'));
     }
 
     /**
@@ -101,14 +80,13 @@ class TodoListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(TodoListCreatRequest $request, $id)
+    public function update(Request $request, $todoListId,$id)
     {
         //
-        $todolist =Todolist::findOrFail($id);
-
-        $todolist->update($request->all());
-
-        return view("todolists.item", compact('todolist'));
+        $task = Task::findOrFail($id);
+        $task->completed_at = $request['completed'] == 'true' ? Carbon::now() : null;
+        $affectedRow = $task->update();
+        echo $affectedRow;
     }
 
     /**
@@ -117,11 +95,11 @@ class TodoListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($todoListId, $id)
     {
         //
-        $todolist = Todolist::findOrFail($id);
-        $todolist->delete();
-        return $todolist;
+        $task = Task::findOrFail($id);
+        $task->delete();
+        return $task;
     }
 }

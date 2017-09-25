@@ -26,11 +26,23 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Todolist::class, function (Faker\Generator $faker) {
 
-
+    $faker->languageCode ='en_US';
     return [
         'title' => $faker->sentence(7,10),
         'user_id' => $faker->numberBetween(1,4),
         'description'=>$faker->paragraph(rand(5,10), true),
+
+
+    ];
+});
+
+$factory->define(App\Task::class, function (Faker\Generator $faker) {
+
+    $faker->languageCode ='en_US';
+    return [
+        'title' => $faker->sentence(7,10),
+        'todo_list_id' => $faker->numberBetween(1,4),
+        'completed_at' => rand(0,1) == 0 ? NULL : $faker->dateTime(),
 
 
     ];

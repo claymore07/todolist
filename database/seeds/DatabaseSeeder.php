@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
         //DB::table('users')->truncate();
         //factory(App\User::class, 4)->create();
         DB::table('todolists')->truncate();
-        factory(App\Todolist::class, 5)->create();
+        DB::table('tasks')->truncate();
+        factory(App\Todolist::class, 15)->create();
+
+        factory(App\Task::class, 15)->create();
     }
 }

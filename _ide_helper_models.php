@@ -10,6 +10,27 @@
 
 namespace App{
 /**
+ * App\Task
+ *
+ * @property int $id
+ * @property string $title
+ * @property int $todoListId
+ * @property string|null $completedAt
+ * @property \Carbon\Carbon|null $createdAt
+ * @property \Carbon\Carbon|null $updatedAt
+ * @property-read \App\Todolist $todolist
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereCompletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereTodoListId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Task whereUpdatedAt($value)
+ */
+	class Task extends \Eloquent {}
+}
+
+namespace App{
+/**
  * App\Todolist
  *
  * @property int $id
@@ -18,6 +39,7 @@ namespace App{
  * @property string $description
  * @property \Carbon\Carbon|null $createdAt
  * @property \Carbon\Carbon|null $updatedAt
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Task[] $tasks
  * @property-read \App\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Todolist whereDescription($value)
